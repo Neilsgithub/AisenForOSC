@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<app-settings>
+
+	<setting type="app_key">
+		<des>APP应用clientId</des>
+		<value>eofYJsnDQPxVtuI5AZXV</value>
+	</setting>
+
+	<setting type="app_secret">
+		<des>APP应用clientSecret</des>
+		<value>NEbWCbu230LH0fbdxC5G8WoRSduNRhWm</value>
+	</setting>
+
+	<setting type="callback_url">
+		<des>授权回调地址</des>
+		<value>http://aisenyuedu.duapp.com/osc/</value>
+	</setting>
+
+	<setting type="base_url">
+		<des>开源中国服务地址</des>
+		<value>http://www.oschina.net/</value>
+	</setting>
+
+	<setting type="requestOauch">
+		<des>请求浏览器授权</des>
+		<value>action/oauth2/authorize</value>
+	</setting>
+	
+	<setting type="actionToken">
+		<des>获取Token的地址</des>
+		<value>action/openapi/token</value>
+	</setting>
+	
+	<setting type="actionNewss">
+		<des>获取新闻列表</des>
+		<value>action/api/news_list</value>
+		<extras>
+			<extra type="cache_enable">
+				<value>true</value>
+			</extra>
+			<extra type="cache_utility">
+				<value>org.aisen.osc.support.cache.NewsCacheUtility</value>
+			</extra>
+		</extras>
+	</setting>
+	
+</app-settings>

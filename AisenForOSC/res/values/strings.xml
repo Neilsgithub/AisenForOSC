@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">aisenforosc</string>
+
+    <!-- 用户授权 -->
+    <string name="ui_login_title">用户授权</string>
+    <string name="msg_login_success">授权成功</string>
+    <string name="msg_login_faild">授权失败</string>
+    
+</resources>
