@@ -43,6 +43,8 @@
 		</activity>
 		<!-- 公共页面 -->
 		<activity android:name="org.aisen.osc.ui.activity.common.FragmentContainerActivity" />
+		<!-- 首页 -->
+		<activity android:name="org.aisen.osc.ui.activity.main.MainActivity" />
 	</application>
 
 </manifest>

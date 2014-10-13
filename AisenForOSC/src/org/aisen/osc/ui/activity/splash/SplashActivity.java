@@ -1,10 +1,10 @@
 package org.aisen.osc.ui.activity.splash;
 
 import org.aisen.osc.R;
+import org.aisen.osc.support.utils.AppContext;
 import org.aisen.osc.ui.activity.common.BaseOSCActivity;
-import org.aisen.osc.ui.activity.common.FragmentContainerActivity;
-import org.aisen.osc.ui.fragment.news.NewsFragment;
-import org.aisen.osc.ui.fragment.news.NewsSwipeFragment;
+import org.aisen.osc.ui.activity.main.MainActivity;
+import org.aisen.osc.ui.fragment.settings.AboutFragment;
 
 import android.os.Bundle;
 
@@ -22,8 +22,12 @@ public class SplashActivity extends BaseOSCActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ui_splash);
 		
-//		FragmentContainerActivity.launch(this, NewsFragment.class, null);
-		FragmentContainerActivity.launch(this, NewsSwipeFragment.class, null);
+		if (AppContext.isLogedin()) {
+			MainActivity.launch(this);
+		}
+		else {
+			AboutFragment.launch(this, true);
+		}
 		
 		finish();
 	}

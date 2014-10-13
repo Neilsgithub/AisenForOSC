@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="bg_content">#FFffffff</color>
+    <!-- ActionBar的字体颜色 -->
+    <color name="ac_title">#ffffffff</color>
+    <color name="ac_subtitle">#80ffffff</color>
+</resources>

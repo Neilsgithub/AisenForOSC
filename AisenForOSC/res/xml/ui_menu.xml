@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/user_title">
+	    <org.aisen.osc.ui.widget.UserPreference android:key="01" />
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="@string/tweet_category">
+		<Preference android:key="11" android:title="@string/tweet_01" />
+ 	
+ 		<Preference android:key="12" android:title="@string/tweet_02" />
+ 		
+ 		<Preference android:key="13" android:title="@string/tweet_03" />
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="@string/news_category">
+		<Preference android:key="21" android:title="@string/news_01" />
+ 	
+ 		<Preference android:key="22" android:title="@string/news_02" />
+ 		
+ 		<Preference android:key="23" android:title="@string/news_03" />
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="@string/post_category">
+		<Preference android:key="31" android:title="@string/post_01" />
+ 	
+ 		<Preference android:key="32" android:title="@string/post_02" />
+ 		
+ 		<Preference android:key="33" android:title="@string/post_03" />
+ 		
+ 		<Preference android:key="34" android:title="@string/post_04" />
+ 		
+ 		<Preference android:key="35" android:title="@string/post_05" />
+    </PreferenceCategory>
+	 	
+</PreferenceScreen>

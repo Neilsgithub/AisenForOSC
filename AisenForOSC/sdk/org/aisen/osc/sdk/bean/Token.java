@@ -1,10 +1,13 @@
 package org.aisen.osc.sdk.bean;
 
+import com.m.support.sqlite.annotation.Id;
+
 
 public class Token extends Entity {
 
 	private static final long serialVersionUID = -928720983750304048L;
 
+	@Id(column = "token")
 	private String access_token;
 	
 	private String refresh_token;

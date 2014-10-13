@@ -6,6 +6,7 @@ import org.aisen.osc.sdk.OSCApi;
 import org.aisen.osc.sdk.OSCApi.ApiType;
 import org.aisen.osc.sdk.bean.NewsList;
 import org.aisen.osc.sdk.bean.Token;
+import org.aisen.osc.sdk.bean.User;
 
 import android.test.AndroidTestCase;
 
@@ -33,7 +34,7 @@ public class OSCTestUnit extends AndroidTestCase {
 	private Token getToken() {
 		Token token = new Token();
 		
-		token.setAccess_token("870a4dc8-96a1-45b3-83f2-12de3dafaec1");
+		token.setAccess_token("ed0a5d2c-3f55-49cb-af8a-4184f0726ccf");
 		
 		return token;
 	}
@@ -42,11 +43,20 @@ public class OSCTestUnit extends AndroidTestCase {
 		System.out.println(JSON.toJSONString(s));
 	}
 	
-	public void testGetNewss() throws Throwable {
+	public void testGetNews() throws Throwable {
 		try {
 			int catalog = 1;// 1-所有|2-综合新闻|3-软件更新
 			NewsList bean = OSCApi.newInstance(null).getNews(catalog, 1, 5);
 			log(bean);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void testGetUser() throws Throwable {
+		try {
+			User user = OSCApi.newInstance(getToken()).getUser();
+			log(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

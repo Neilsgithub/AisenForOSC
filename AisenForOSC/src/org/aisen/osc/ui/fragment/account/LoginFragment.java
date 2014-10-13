@@ -1,8 +1,11 @@
 package org.aisen.osc.ui.fragment.account;
 
+import java.io.Serializable;
+
 import org.aisen.osc.R;
 import org.aisen.osc.sdk.OSCApi;
 import org.aisen.osc.sdk.bean.Token;
+import org.aisen.osc.sdk.bean.User;
 import org.aisen.osc.ui.activity.common.FragmentContainerActivity;
 
 import android.annotation.SuppressLint;
@@ -126,13 +129,13 @@ public class LoginFragment extends ABaseFragment {
 		OSCApi.newInstance(null).doWebRequest(webView);
 	}
 	
-	class LoginTask extends WorkTask<String, Integer, Token> {
+	class LoginTask extends WorkTask<String, Integer, Serializable[]> {
 
 		@Override
 		protected void onPrepare() {
 			super.onPrepare();
 			
-			ViewUtils.createNormalProgressDialog(getActivity(), getString(R.string.msg_login_faild)).show();
+			ViewUtils.createNormalProgressDialog(getActivity(), getString(R.string.login_loading)).show();
 		}
 		
 		@Override
@@ -144,8 +147,13 @@ public class LoginFragment extends ABaseFragment {
 		}
 		
 		@Override
-		public Token workInBackground(String... params) throws TaskException {
-			return OSCApi.newInstance(null).getToken(params[0]);
+		public Serializable[] workInBackground(String... params) throws TaskException {
+			Token token =  OSCApi.newInstance(null).getToken(params[0]);
+			
+			publishProgress(R.string.login_user_loading);
+			User user = OSCApi.newInstance(token).getUser();
+			
+			return new Serializable[]{ token, user };
 		}
 		
 		@Override
@@ -153,17 +161,23 @@ public class LoginFragment extends ABaseFragment {
 			super.onFailure(exception);
 			
 			showMessage(exception.getErrorMsg());
+			
+			loginTask = null;
 		}
 		
 		@Override
-		protected void onSuccess(Token result) {
+		protected void onSuccess(Serializable[] result) {
 			super.onSuccess(result);
 			
-			showMessage(R.string.msg_login_success);
+			showMessage(R.string.login_success);
 			
 			if (getActivity() != null) {
+				Token token = (Token) result[0];
+				User user = (User) result[1];
+				
 				Intent data = new Intent();
-				data.putExtra("token", result);
+				data.putExtra("token", token);
+				data.putExtra("user", user);
 				getActivity().setResult(Activity.RESULT_OK, data);
 				getActivity().finish();
 			}
@@ -175,7 +189,6 @@ public class LoginFragment extends ABaseFragment {
 			
 			ViewUtils.dismissNormalProgressDialog();
 			
-			loginTask = null;
 		}
 		
 	}

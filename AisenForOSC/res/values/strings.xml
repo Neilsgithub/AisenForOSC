@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">aisenforosc</string>
+    <string name="app_name">AisenForOSC</string>
 
+    <string name="reload">刷新看看</string>
+	<string name="draw_open">打开</string>
+	<string name="draw_close">关闭</string>
+    
     <!-- 用户授权 -->
     <string name="ui_login_title">用户授权</string>
-    <string name="msg_login_success">授权成功</string>
-    <string name="msg_login_faild">授权失败</string>
+    <string name="login_success">授权成功</string>
+    <string name="login_faild">授权失败</string>
+    <string name="login_loading">正在授权</string>
+    <string name="login_user_loading">正在加载用户信息</string>
+    
+    <!-- 首页 -->
+	<string name="main_exit">再按一次退出</string>
+    
+	<!-- 个人资料 -->
+	<string name="user_title">用户</string>
+	
+    <!-- 动弹 -->
+    <string name="tweet_title">动弹</string>
+    <string name="tweet_category">动弹</string>
+    <string name="tweet_01">最新动弹</string>
+    <string name="tweet_02">热门动弹</string>
+    <string name="tweet_03">我的动弹</string>
+    
+    <!-- 资讯 -->
+    <string name="news_title">资讯</string>
+    <string name="news_category">资讯</string>
+    <string name="news_01">最新资讯</string>
+    <string name="news_02">最新博客</string>
+    <string name="news_03">推荐阅读</string>
+    
+    
+    <!-- 问答 -->
+    <string name="post_title">问答</string>
+    <string name="post_category">问答</string>
+    <string name="post_01">问答</string>
+    <string name="post_02">分享</string>
+    <string name="post_03">综合</string>
+    <string name="post_04">职业</string>
+    <string name="post_05">站务</string>
     
 </resources>

@@ -2,6 +2,7 @@ package org.aisen.osc.sdk;
 
 import org.aisen.osc.sdk.bean.NewsList;
 import org.aisen.osc.sdk.bean.Token;
+import org.aisen.osc.sdk.bean.User;
 import org.aisen.osc.sdk.http.OSCHttpUtility;
 
 import android.webkit.WebView;
@@ -143,6 +144,16 @@ public class OSCApi extends ABaseBizlogic {
 		params.addParameter("code", code);
 		
 		return doGet(getSetting("actionToken"), configParams(params), Token.class);
+	}
+	
+	/**
+	 * 获取用户信息
+	 * 
+	 * @return
+	 * @throws TaskException
+	 */
+	public User getUser() throws TaskException {
+		return doPost(configHttpConfig(), getSetting("actionUser"), configParams(null), User.class, null);
 	}
 	
 	/**
