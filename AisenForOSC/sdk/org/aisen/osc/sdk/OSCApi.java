@@ -1,16 +1,25 @@
 package org.aisen.osc.sdk;
 
+import org.aisen.osc.sdk.bean.BaseBean;
 import org.aisen.osc.sdk.bean.NewsList;
 import org.aisen.osc.sdk.bean.Token;
+import org.aisen.osc.sdk.bean.TweetBeans;
 import org.aisen.osc.sdk.bean.User;
+import org.aisen.osc.sdk.http.OSCHttpConfig;
 import org.aisen.osc.sdk.http.OSCHttpUtility;
+import org.aisen.osc.support.utils.AppContext;
 
+import android.text.TextUtils;
 import android.webkit.WebView;
 
+import com.m.common.context.GlobalContext;
 import com.m.common.params.Params;
 import com.m.common.params.ParamsUtil;
 import com.m.common.settings.SettingUtility;
+import com.m.common.utils.ActivityHelper;
 import com.m.common.utils.Consts;
+import com.m.common.utils.Logger;
+import com.m.common.utils.SystemUtility;
 import com.m.support.bizlogic.ABaseBizlogic;
 import com.m.support.network.HttpConfig;
 import com.m.support.network.HttpUtility;
@@ -38,14 +47,27 @@ public class OSCApi extends ABaseBizlogic {
 		return new OSCHttpUtility();
 	}
 	
+	private static String getUserAgent() {
+		StringBuilder sb = new StringBuilder("OSChina.NET");
+		sb.append('/'+SystemUtility.getVersionName(GlobalContext.getInstance())+'_'+SystemUtility.getVersionCode(GlobalContext.getInstance()));// App版本
+		sb.append("/Aisen");// 手机系统平台
+		sb.append("/"+android.os.Build.VERSION.RELEASE);// 手机系统版本
+		sb.append("/"+android.os.Build.MODEL); // 手机型号
+		sb.append("/"+"Aisen");// 客户端唯一标识
+		return sb.toString();
+	}
+	
 	@Override
 	protected HttpConfig configHttpConfig() {
-		HttpConfig httpConfig = new HttpConfig();
+		OSCHttpConfig httpConfig = new OSCHttpConfig();
 		httpConfig.baseUrl = getSetting(Consts.Setting.BASE_URL).getValue();
-		if (token != null)
-			httpConfig.authrization = "OAuth2 " + token.getAccess_token();
+		httpConfig.contentType = "text/xml";
+		httpConfig.userAgent = getUserAgent();
 		
-		httpConfig.contentType = "application/json";
+		if (!TextUtils.isEmpty(ActivityHelper.getInstance().getShareData("cookie", ""))) {
+			httpConfig.cookie = ActivityHelper.getInstance().getShareData("cookie", "");
+			Logger.w(httpConfig.cookie);
+		}
 		return httpConfig;
 	}
 	
@@ -69,6 +91,10 @@ public class OSCApi extends ABaseBizlogic {
 		super(cacheMode);
 		
 		this.token = token;
+	}
+	
+	public static OSCApi newInstance() {
+		return new OSCApi(CacheMode.disable, AppContext.getToken());
 	}
 	
 	public static OSCApi newInstance(Token token) {
@@ -105,11 +131,30 @@ public class OSCApi extends ABaseBizlogic {
 			params = new Params();
 		}
 
-		params.addParameter("dataType", "json");
-		if (token != null)
+		if (token != null) {
+			params.addParameter("dataType", "json");
 			params.addParameter("access_token", token.getAccess_token());
+		}
 
 		return params;
+	}
+	
+	/**
+	 * 验证结果是否有错误
+	 * 
+	 * @param t
+	 * @return
+	 * @throws TaskException
+	 */
+	private <T> T checkResult(T t) throws TaskException {
+		if (t instanceof BaseBean) {
+			BaseBean baseBean = (BaseBean) t;
+			
+			if (!"1".equals(baseBean.getError()) && !TextUtils.isEmpty(baseBean.getError_description()))
+				throw new TaskException(baseBean.getError(), baseBean.getError_description());
+		}
+			
+		return t;
 	}
 	
 	/**
@@ -147,6 +192,23 @@ public class OSCApi extends ABaseBizlogic {
 	}
 	
 	/**
+	 * 用户登录
+	 * 
+	 * @param username
+	 * @param pwd
+	 * @return
+	 * @throws TaskException
+	 */
+	public User doLogin(String username, String pwd) throws TaskException {
+		Params params = new Params();
+		params.addParameter("username", username);
+		params.addParameter("pwd", pwd);
+		params.addParameter("keep_login", "1");
+		
+		return checkResult(doPost(configHttpConfig(), getSetting("actionLogin"), configParams(params), User.class, null));
+	}
+	
+	/**
 	 * 获取用户信息
 	 * 
 	 * @return
@@ -154,6 +216,24 @@ public class OSCApi extends ABaseBizlogic {
 	 */
 	public User getUser() throws TaskException {
 		return doPost(configHttpConfig(), getSetting("actionUser"), configParams(null), User.class, null);
+	}
+	
+	/**
+	 * 获取动弹列表 （最新动弹列表 我的动弹）
+	 * 注意，接口定义分页是从1开始的，但是实际调用WebService接口是从0开始的
+	 * 
+	 * @param type
+	 * @return
+	 * @throws TaskException
+	 */
+	public TweetBeans getTweetList(String type, int pageIndex, int pageSize) throws TaskException {
+		Params params = new Params();
+		params.addParameter("uid", type);
+		// 分页是从0开始的
+		params.addParameter("pageIndex", String.valueOf(pageIndex - 1));
+		params.addParameter("pageSize", String.valueOf(pageSize));
+		
+		return doGet(getSetting("actionTweetList"), configParams(params), TweetBeans.class);
 	}
 	
 	/**

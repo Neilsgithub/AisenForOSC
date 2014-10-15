@@ -19,7 +19,7 @@ public class MyApplication extends GlobalContext {
 	public void onCreate() {
 		super.onCreate();
 		
-		OSCApi.config(ApiType.openapi);
+		OSCApi.config(ApiType.api);
 		OSCApi.init();
 		
 		MToast.type = 2;

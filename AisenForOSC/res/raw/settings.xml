@@ -31,7 +31,7 @@
 	
 	<setting type="double_click_refresh">
 		<des>双击操作栏自动刷新程序</des>
-		<value>true</value>
+		<value>false</value>
 	</setting>
 
 	<setting type="saveImage">

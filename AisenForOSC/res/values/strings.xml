@@ -6,6 +6,11 @@
     <string name="reload">刷新看看</string>
 	<string name="draw_open">打开</string>
 	<string name="draw_close">关闭</string>
+	
+	<string name="msg_now">刚刚</string>
+	<string name="msg_today">今天</string>
+	<string name="msg_yesterday">昨天</string>
+	<string name="msg_few_minutes_ago">分钟前</string>
     
     <!-- 用户授权 -->
     <string name="ui_login_title">用户授权</string>
@@ -13,6 +18,17 @@
     <string name="login_faild">授权失败</string>
     <string name="login_loading">正在授权</string>
     <string name="login_user_loading">正在加载用户信息</string>
+    
+    <!-- 用户登录 -->
+    <string name="login_title">用户登录</string>
+    <string name="login_username_hint">用户名</string>
+    <string name="login_pwd_hint">密码</string>
+    <string name="login_btn">登录</string>
+    <string name="login_about"></string>
+    <string name="login_error_username_empty">用户名不能为空</string>
+    <string name="login_error_pwd_empty">密码不能为空</string>
+    <string name="login_error_invalid">用户名或者密码不正确</string>
+    <string name="login_loading_1">正在登录</string>
     
     <!-- 首页 -->
 	<string name="main_exit">再按一次退出</string>

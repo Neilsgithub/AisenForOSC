@@ -6,6 +6,7 @@ import org.aisen.osc.sdk.OSCApi;
 import org.aisen.osc.sdk.OSCApi.ApiType;
 import org.aisen.osc.sdk.bean.NewsList;
 import org.aisen.osc.sdk.bean.Token;
+import org.aisen.osc.sdk.bean.TweetBeans;
 import org.aisen.osc.sdk.bean.User;
 
 import android.test.AndroidTestCase;
@@ -21,12 +22,12 @@ public class OSCTestUnit extends AndroidTestCase {
 		
 		SettingUtility.setSettingUtility();
 		
-//		OSCApi.config(ApiType.api);
-		OSCApi.config(ApiType.openapi);
+		OSCApi.config(ApiType.api);
+//		OSCApi.config(ApiType.openapi);
 		OSCApi.init();
 		
 		try {
-			Thread.sleep(2 * 1000);
+			Thread.sleep(5 * 1000);
 		} catch (Exception e) {
 		}
 	}
@@ -43,6 +44,14 @@ public class OSCTestUnit extends AndroidTestCase {
 		System.out.println(JSON.toJSONString(s));
 	}
 	
+	public void testLogin() throws Throwable {
+		try {
+			OSCApi.newInstance(null).doLogin("wangd.info@gmail.com", "wangdan7560");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void testGetNews() throws Throwable {
 		try {
 			int catalog = 1;// 1-所有|2-综合新闻|3-软件更新
@@ -57,6 +66,16 @@ public class OSCTestUnit extends AndroidTestCase {
 		try {
 			User user = OSCApi.newInstance(getToken()).getUser();
 			log(user);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void testGetTweetList() throws Throwable {
+		try {
+			// 723627
+			TweetBeans beans = OSCApi.newInstance(getToken()).getTweetList("723627", 0, 5);
+			log(beans);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.aisen.osc.R;
 import org.aisen.osc.support.bean.MenuBean;
-import org.aisen.osc.ui.fragment.account.LoginFragment;
 import org.aisen.osc.ui.fragment.tab.ATabsFragment;
 
 import android.content.res.Resources;
@@ -27,7 +26,7 @@ public class TweetTabsFragment extends ATabsFragment {
 	
 	@Override
 	protected ABaseFragment newFragment(MenuBean menu) {
-		return new LoginFragment();
+		return TweetListFragment.newInstance(menu);
 	}
 
 	@Override

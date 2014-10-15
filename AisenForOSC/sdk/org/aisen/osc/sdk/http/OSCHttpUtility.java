@@ -10,27 +10,22 @@ import java.net.UnknownHostException;
 
 import org.aisen.osc.sdk.OSCApi.ApiType;
 import org.aisen.osc.sdk.support.xml.IXmlToDto;
+import org.apache.commons.httpclient.ConnectTimeoutException;
+import org.apache.commons.httpclient.Cookie;
+import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.cookie.CookiePolicy;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.conn.params.ConnRouteParams;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
 
-import android.net.Proxy;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -38,6 +33,7 @@ import com.m.common.params.Params;
 import com.m.common.params.ParamsUtil;
 import com.m.common.settings.Setting;
 import com.m.common.settings.SettingUtility;
+import com.m.common.utils.ActivityHelper;
 import com.m.common.utils.Logger;
 import com.m.common.utils.SystemUtility;
 import com.m.common.utils.SystemUtility.NetWorkType;
@@ -50,6 +46,8 @@ import com.m.support.task.TaskException;
 public class OSCHttpUtility implements HttpUtility {
 
 	private static final String TAG = DefHttpUtility.class.getSimpleName();
+	
+	static final int TIMEOUT_SOCKET = 8 * 1000;
 
 	@Override
 	public <T> T doGet(HttpConfig config, Setting action, Params params, Class<T> responseCls) throws TaskException {
@@ -60,10 +58,7 @@ public class OSCHttpUtility implements HttpUtility {
 		String url = (config.baseUrl + action.getValue() + (params == null ? "" : "?" + ParamsUtil.encodeToURLParams(params))).replaceAll(" ", "");
 		Logger.v(TAG, url);
 
-		HttpGet httpGet = new HttpGet(url);
-		configHttpHeader(httpGet, config);
-
-		return executeClient(httpGet, responseCls);
+		return executeClient(action, getHttpGet(url, config), responseCls);
 	}
 
 	@Override
@@ -75,24 +70,17 @@ public class OSCHttpUtility implements HttpUtility {
 		String url = (config.baseUrl + action.getValue() + (params == null ? "" : "?" + ParamsUtil.encodeToURLParams(params))).replaceAll(" ", "");
 		Logger.v(TAG, url);
 
-		HttpPost httpPost = new HttpPost(url);
-		configHttpHeader(httpPost, config);
-
-		if (requestObj != null) {
-			String requestBodyStr = null;
-			if (requestObj instanceof Params) {
-				Params p = (Params) requestObj;
-				requestBodyStr = ParamsUtil.encodeToURLParams(p);
-			}
-			else {
-				requestBodyStr = JSON.toJSONString(requestObj);
-			}
-			
-			ByteArrayEntity entity = new ByteArrayEntity(requestBodyStr.getBytes());
-			httpPost.setEntity(entity);
-		}
-
-		return executeClient(httpPost, responseCls);
+		PostMethod httpPost = getHttpPost(url, config);
+		
+		int length = params == null ? 0 : params.size();
+		Part[] parts = new Part[length];
+		int i = 0;
+        if(params != null)
+        for(String name : params.getKeys()){
+        	parts[i++] = new StringPart(name, String.valueOf(params.getParameter(name)), "UTF-8");
+        }
+        
+		return executeClient(action, httpPost, responseCls);
 	}
 
 	public <T> T uploadFile(HttpConfig config, Setting action, Params params, File file, Params headers, Class<T> responseClazz) throws TaskException {
@@ -149,13 +137,26 @@ public class OSCHttpUtility implements HttpUtility {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> T executeClient(HttpUriRequest request, Class<T> responseCls) throws TaskException {
+	private <T> T executeClient(Setting action, HttpMethod request, Class<T> responseCls) throws TaskException {
 		try {
 			HttpClient httpClient = generateHttpClient();
 
-			HttpResponse httpResponse = httpClient.execute(request);
-			if (httpResponse.getStatusLine().getStatusCode() / 100 == 2) {
-				String responseStr = readResponse(httpResponse);
+			int statusCode = httpClient.executeMethod(request);
+			if (statusCode == HttpStatus.SC_OK) {
+				if (action != null && action.getType().equals("actionLogin")) {
+					Cookie[] cookies = httpClient.getState().getCookies();
+		            String tmpcookies = "";
+		            for (Cookie ck : cookies) {
+		                tmpcookies += ck.toString()+";";
+		            }
+		            //保存cookie   
+	        		if(!TextUtils.isEmpty(tmpcookies)){
+	        			Logger.w(tmpcookies);
+	        			ActivityHelper.getInstance().putShareData("cookie", tmpcookies);
+	        		}
+				}
+				
+				String responseStr = readResponse(request.getResponseBodyAsStream());
 				try {
 					if (responseCls.getSimpleName().equals("String"))
 						return (T) responseStr;
@@ -167,8 +168,8 @@ public class OSCHttpUtility implements HttpUtility {
 				}
 			} else {
 				Logger.e(ABaseBizlogic.TAG,
-						String.format("Access to the server error, statusCode = %d", httpResponse.getStatusLine().getStatusCode()));
-				Logger.w(ABaseBizlogic.TAG, readResponse(httpResponse));
+						String.format("Access to the server error, statusCode = %d", statusCode));
+				Logger.w(ABaseBizlogic.TAG, request.getResponseBodyAsString());
 				throw new TaskException(TaskException.TaskError.timeout.toString());
 			}
 		} catch (SocketTimeoutException e) {
@@ -189,33 +190,55 @@ public class OSCHttpUtility implements HttpUtility {
 		}
 	}
 
-	private void configHttpHeader(HttpUriRequest request, HttpConfig config) {
-		request.addHeader("Cookie", config.cookie);
-		request.addHeader("Accept-Charset", "utf-8");
-		if (!TextUtils.isEmpty(config.contentType))
-			request.addHeader("Content-Type", config.contentType);
-		else
-			request.addHeader("Content-Type", "application/json");
+	private static GetMethod getHttpGet(String url, HttpConfig config) {
+		GetMethod httpGet = new GetMethod(url);
+		// 设置 请求超时时间
+		httpGet.getParams().setSoTimeout(TIMEOUT_SOCKET);
+		httpGet.setRequestHeader("Host", "www.oschina.net");
+		httpGet.setRequestHeader("Connection","Keep-Alive");
+		httpGet.setRequestHeader("Cookie", config.cookie);
+		if (config instanceof OSCHttpConfig)
+			httpGet.setRequestHeader("User-Agent", ((OSCHttpConfig) config).userAgent);
+		return httpGet;
+	}
+	
+	private static PostMethod getHttpPost(String url, HttpConfig config) {
+		PostMethod httpPost = new PostMethod(url);
+		// 设置 请求超时时间
+		httpPost.getParams().setSoTimeout(TIMEOUT_SOCKET);
+		httpPost.setRequestHeader("Host", "www.oschina.net");
+		httpPost.setRequestHeader("Connection","Keep-Alive");
+		httpPost.setRequestHeader("Cookie", config.cookie);
+		if (config.cookie != null)
+			Logger.d(ABaseBizlogic.TAG, config.cookie);
+		if (config instanceof OSCHttpConfig) {
+			String userAgent = ((OSCHttpConfig) config).userAgent;
+			if (!TextUtils.isEmpty(userAgent)) {
+				httpPost.setRequestHeader("User-Agent", userAgent);
+				Logger.d(ABaseBizlogic.TAG, userAgent);
+			}
+		}
+		return httpPost;
 	}
 
 	private HttpClient generateHttpClient() {
-		BasicHttpParams httpParameters = new BasicHttpParams();
-		HttpConnectionParams.setConnectionTimeout(httpParameters, 8 * 1000);
-		HttpConnectionParams.setSoTimeout(httpParameters, 8 * 1000);
-		DefaultHttpClient client = new DefaultHttpClient(httpParameters);
+		HttpClient httpClient = new HttpClient();
+		// 设置 HttpClient 接收 Cookie,用与浏览器一样的策略
+		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+        // 设置 默认的超时重试处理策略
+		httpClient.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());
+		// 设置 连接超时时间
+		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(TIMEOUT_SOCKET);
+		// 设置 读数据超时时间 
+		httpClient.getHttpConnectionManager().getParams().setSoTimeout(TIMEOUT_SOCKET);
+		// 设置 字符集
+		httpClient.getParams().setContentCharset("UTF-8");
 
-		String host = Proxy.getDefaultHost();
-		if (host != null) {
-			int port = Proxy.getDefaultPort();
-			client.getParams().setParameter(ConnRouteParams.DEFAULT_PROXY, new HttpHost(host, port));
-		}
-		return client;
+		return httpClient;
 	}
 
-	private String readResponse(HttpResponse response) throws IllegalStateException, IOException {
+	private String readResponse(InputStream inputStream) throws IllegalStateException, IOException {
 		String result = "";
-		HttpEntity entity = response.getEntity();
-		InputStream inputStream = entity.getContent();
 
 		ByteArrayOutputStream content = new ByteArrayOutputStream();
 

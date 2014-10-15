@@ -6,7 +6,7 @@ import org.aisen.osc.sdk.bean.User;
 import org.aisen.osc.support.utils.AppContext;
 import org.aisen.osc.ui.activity.common.FragmentContainerActivity;
 import org.aisen.osc.ui.activity.main.MainActivity;
-import org.aisen.osc.ui.fragment.account.LoginFragment;
+import org.aisen.osc.ui.fragment.account.OauthFragment;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -71,7 +71,7 @@ public class AboutFragment extends ABaseFragment {
 	}
 	
 	void launchLogin(View v) {
-		LoginFragment.launch(this, 1000);
+		OauthFragment.launch(this, 1000);
 	}
 	
 	@Override

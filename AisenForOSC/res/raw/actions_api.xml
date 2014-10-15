@@ -31,6 +31,21 @@
 		<value>action/openapi/token</value>
 	</setting>
 	
+	<setting type="actionLogin">
+		<des>用户登录</des>
+		<value>action/api/login_validate</value>
+	</setting>
+	
+	<setting type="actionUser">
+		<des>获取当前登录用户的账户信息</des>
+		<value>action/api/user</value>
+	</setting>
+	
+	<setting type="actionTweetList">
+		<des>获取动弹列表 （最新动弹列表 我的动弹）</des>
+		<value>action/api/tweet_list</value>
+	</setting>
+	
 	<setting type="actionNewss">
 		<des>获取新闻列表</des>
 		<value>action/api/news_list</value>

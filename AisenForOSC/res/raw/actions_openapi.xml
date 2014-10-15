@@ -36,6 +36,11 @@
 		<value>action/openapi/user</value>
 	</setting>
 	
+	<setting type="actionTweetList">
+		<des>获取动弹列表 （最新动弹列表 我的动弹）</des>
+		<value>action/openapi/tweet_list</value>
+	</setting>
+	
 	<setting type="actionNewss">
 		<des>获取新闻列表</des>
 		<value>action/openapi/news_list</value>

@@ -17,7 +17,7 @@ public class AppContext {
 	 * @return
 	 */
 	public static boolean isLogedin() {
-		return token != null && user != null;
+		return user != null;
 	}
 	
 	/**
@@ -32,7 +32,8 @@ public class AppContext {
 		AppContext.user = user;
 		
 		if (save) {
-			OSCDb.getSqlite().insert(null, token);
+			if (token != null )
+				OSCDb.getSqlite().insert(null, token);
 			OSCDb.getSqlite().insert(new Extra(null, "oauth"), user);
 		}
 	}

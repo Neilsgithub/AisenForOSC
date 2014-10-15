@@ -22,5 +22,25 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/vpi__light_theme</item>
     </style>
+    
+	<style name="userName">
+		<item name="android:textColor">@drawable/main_text</item>
+		<item name="android:textSize">16sp</item>
+		<item name="android:lineSpacingExtra">4dip</item>
+		<item name="android:singleLine">true</item>
+		<item name="android:ellipsize">end</item>
+	</style>
+	
+	<style name="hintText">
+		<item name="android:textColor">@drawable/hint</item>
+		<item name="android:textSize">14sp</item>
+		<item name="android:singleLine">true</item>
+		<item name="android:ellipsize">end</item>
+	</style>
+	
+	<style name="hintCounter">
+	    <item name="android:textSize">10sp</item>
+	    <item name="android:textColor">@drawable/post_counters</item>
+	</style>
 	
 </resources>

@@ -4,8 +4,6 @@ import org.aisen.osc.R;
 import org.aisen.osc.support.bean.MenuBean;
 import org.aisen.osc.ui.activity.main.MainActivity;
 
-import com.m.common.utils.Logger;
-
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;

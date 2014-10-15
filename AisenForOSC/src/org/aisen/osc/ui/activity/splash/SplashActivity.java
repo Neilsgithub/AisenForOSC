@@ -4,7 +4,7 @@ import org.aisen.osc.R;
 import org.aisen.osc.support.utils.AppContext;
 import org.aisen.osc.ui.activity.common.BaseOSCActivity;
 import org.aisen.osc.ui.activity.main.MainActivity;
-import org.aisen.osc.ui.fragment.settings.AboutFragment;
+import org.aisen.osc.ui.fragment.account.LoginFragment;
 
 import android.os.Bundle;
 
@@ -26,7 +26,7 @@ public class SplashActivity extends BaseOSCActivity {
 			MainActivity.launch(this);
 		}
 		else {
-			AboutFragment.launch(this, true);
+			LoginFragment.launch(this);
 		}
 		
 		finish();
