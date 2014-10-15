@@ -32,7 +32,7 @@ import com.m.support.task.TaskException;
  *
  * @date 2014年9月19日
  */
-public class OSCApi extends ABaseBizlogic {
+public class OSCSdk extends ABaseBizlogic {
 
 	public enum ApiType {
 		api, openapi
@@ -83,38 +83,38 @@ public class OSCApi extends ABaseBizlogic {
 		return getSetting("callback_url").getValue();
 	}
 	
-	private OSCApi() {
+	private OSCSdk() {
 		
 	}
 
-	private OSCApi(CacheMode cacheMode, Token token) {
+	private OSCSdk(CacheMode cacheMode, Token token) {
 		super(cacheMode);
 		
 		this.token = token;
 	}
 	
-	public static OSCApi newInstance() {
-		return new OSCApi(CacheMode.disable, AppContext.getToken());
+	public static OSCSdk newInstance() {
+		return new OSCSdk(CacheMode.disable, AppContext.getToken());
 	}
 	
-	public static OSCApi newInstance(Token token) {
-		return new OSCApi(CacheMode.disable, token);
+	public static OSCSdk newInstance(Token token) {
+		return new OSCSdk(CacheMode.disable, token);
 	}
 
-	public static OSCApi newInstance(CacheMode cacheMode, Token token) {
-		return new OSCApi(cacheMode, token);
+	public static OSCSdk newInstance(CacheMode cacheMode, Token token) {
+		return new OSCSdk(cacheMode, token);
 	}
 	
 	public static void config(ApiType apiType) {
-		OSCApi.apiType = apiType;
+		OSCSdk.apiType = apiType;
 		
 		SettingUtility.setPermanentSetting("apitype", apiType.toString());
 	}
 	
 	public static void init() {
-		if (OSCApi.apiType == ApiType.api)
+		if (OSCSdk.apiType == ApiType.api)
 			SettingUtility.addSettings("actions_api");
-		else if (OSCApi.apiType == ApiType.openapi)
+		else if (OSCSdk.apiType == ApiType.openapi)
 			SettingUtility.addSettings("actions_openapi");
 	}
 	

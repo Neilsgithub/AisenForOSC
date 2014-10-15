@@ -1,7 +1,7 @@
 package org.aisen.osc.ui.fragment.account;
 
 import org.aisen.osc.R;
-import org.aisen.osc.sdk.OSCApi;
+import org.aisen.osc.sdk.OSCSdk;
 import org.aisen.osc.sdk.bean.User;
 import org.aisen.osc.support.utils.AppContext;
 import org.aisen.osc.ui.activity.common.FragmentContainerActivity;
@@ -96,7 +96,7 @@ public class LoginFragment extends ABaseFragment implements TextWatcher {
 
 		@Override
 		public User workInBackground(String... params) throws TaskException {
-			return OSCApi.newInstance().doLogin(params[0], params[1]);
+			return OSCSdk.newInstance().doLogin(params[0], params[1]);
 		}
 		
 		@Override

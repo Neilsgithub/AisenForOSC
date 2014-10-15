@@ -2,8 +2,8 @@ package org.aisen.osc.base;
 
 import java.util.List;
 
-import org.aisen.osc.sdk.OSCApi;
-import org.aisen.osc.sdk.OSCApi.ApiType;
+import org.aisen.osc.sdk.OSCSdk;
+import org.aisen.osc.sdk.OSCSdk.ApiType;
 import org.aisen.osc.sdk.bean.Token;
 import org.aisen.osc.sdk.bean.User;
 import org.aisen.osc.support.utils.AppContext;
@@ -19,8 +19,8 @@ public class MyApplication extends GlobalContext {
 	public void onCreate() {
 		super.onCreate();
 		
-		OSCApi.config(ApiType.api);
-		OSCApi.init();
+		OSCSdk.config(ApiType.api);
+		OSCSdk.init();
 		
 		MToast.type = 2;
 		

@@ -3,7 +3,7 @@ package org.aisen.osc.ui.fragment.account;
 import java.io.Serializable;
 
 import org.aisen.osc.R;
-import org.aisen.osc.sdk.OSCApi;
+import org.aisen.osc.sdk.OSCSdk;
 import org.aisen.osc.sdk.bean.Token;
 import org.aisen.osc.sdk.bean.User;
 import org.aisen.osc.ui.activity.common.FragmentContainerActivity;
@@ -126,7 +126,7 @@ public class OauthFragment extends ABaseFragment {
 		
 		webView.setVisibility(View.VISIBLE);
 		// 请求授权
-		OSCApi.newInstance(null).doWebRequest(webView);
+		OSCSdk.newInstance(null).doWebRequest(webView);
 	}
 	
 	class LoginTask extends WorkTask<String, Integer, Serializable[]> {
@@ -148,10 +148,10 @@ public class OauthFragment extends ABaseFragment {
 		
 		@Override
 		public Serializable[] workInBackground(String... params) throws TaskException {
-			Token token =  OSCApi.newInstance(null).getToken(params[0]);
+			Token token =  OSCSdk.newInstance(null).getToken(params[0]);
 			
 			publishProgress(R.string.login_user_loading);
-			User user = OSCApi.newInstance(token).getUser();
+			User user = OSCSdk.newInstance(token).getUser();
 			
 			return new Serializable[]{ token, user };
 		}

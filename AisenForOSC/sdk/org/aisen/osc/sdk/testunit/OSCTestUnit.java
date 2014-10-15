@@ -2,8 +2,8 @@ package org.aisen.osc.sdk.testunit;
 
 import java.io.Serializable;
 
-import org.aisen.osc.sdk.OSCApi;
-import org.aisen.osc.sdk.OSCApi.ApiType;
+import org.aisen.osc.sdk.OSCSdk;
+import org.aisen.osc.sdk.OSCSdk.ApiType;
 import org.aisen.osc.sdk.bean.NewsList;
 import org.aisen.osc.sdk.bean.Token;
 import org.aisen.osc.sdk.bean.TweetBeans;
@@ -22,9 +22,9 @@ public class OSCTestUnit extends AndroidTestCase {
 		
 		SettingUtility.setSettingUtility();
 		
-		OSCApi.config(ApiType.api);
+		OSCSdk.config(ApiType.api);
 //		OSCApi.config(ApiType.openapi);
-		OSCApi.init();
+		OSCSdk.init();
 		
 		try {
 			Thread.sleep(5 * 1000);
@@ -46,7 +46,7 @@ public class OSCTestUnit extends AndroidTestCase {
 	
 	public void testLogin() throws Throwable {
 		try {
-			OSCApi.newInstance(null).doLogin("wangd.info@gmail.com", "wangdan7560");
+			OSCSdk.newInstance(null).doLogin("wangd.info@gmail.com", "wangdan7560");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -55,7 +55,7 @@ public class OSCTestUnit extends AndroidTestCase {
 	public void testGetNews() throws Throwable {
 		try {
 			int catalog = 1;// 1-所有|2-综合新闻|3-软件更新
-			NewsList bean = OSCApi.newInstance(null).getNews(catalog, 1, 5);
+			NewsList bean = OSCSdk.newInstance(null).getNews(catalog, 1, 5);
 			log(bean);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -64,7 +64,7 @@ public class OSCTestUnit extends AndroidTestCase {
 	
 	public void testGetUser() throws Throwable {
 		try {
-			User user = OSCApi.newInstance(getToken()).getUser();
+			User user = OSCSdk.newInstance(getToken()).getUser();
 			log(user);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -74,7 +74,7 @@ public class OSCTestUnit extends AndroidTestCase {
 	public void testGetTweetList() throws Throwable {
 		try {
 			// 723627
-			TweetBeans beans = OSCApi.newInstance(getToken()).getTweetList("723627", 0, 5);
+			TweetBeans beans = OSCSdk.newInstance(getToken()).getTweetList("723627", 0, 5);
 			log(beans);
 		} catch (Exception e) {
 			e.printStackTrace();

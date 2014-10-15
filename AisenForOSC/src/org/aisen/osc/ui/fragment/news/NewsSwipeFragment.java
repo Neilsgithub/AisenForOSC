@@ -3,7 +3,7 @@ package org.aisen.osc.ui.fragment.news;
 import java.util.List;
 
 import org.aisen.osc.R;
-import org.aisen.osc.sdk.OSCApi;
+import org.aisen.osc.sdk.OSCSdk;
 import org.aisen.osc.sdk.bean.News;
 import org.aisen.osc.sdk.bean.NewsList;
 import org.aisen.osc.support.utils.AppContext;
@@ -83,7 +83,7 @@ public class NewsSwipeFragment extends ASwipeRefreshListFragment<News, NewsList>
 			if (getTaskCount(getTaskId()) > 1 && mode == RefreshMode.reset)
 				cacheMode = CacheMode.disable;
 			
-			return OSCApi.newInstance(cacheMode, AppContext.getToken()).getNews(1, page, 20);
+			return OSCSdk.newInstance(cacheMode, AppContext.getToken()).getNews(1, page, 20);
 		}
 		
 		@Override

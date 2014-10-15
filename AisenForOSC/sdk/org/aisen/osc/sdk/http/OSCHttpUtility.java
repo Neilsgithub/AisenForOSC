@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
-import org.aisen.osc.sdk.OSCApi.ApiType;
+import org.aisen.osc.sdk.OSCSdk.ApiType;
 import org.aisen.osc.sdk.support.xml.IXmlToDto;
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.Cookie;

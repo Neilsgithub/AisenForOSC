@@ -3,7 +3,7 @@ package org.aisen.osc.ui.fragment.tweet;
 import java.util.List;
 
 import org.aisen.osc.R;
-import org.aisen.osc.sdk.OSCApi;
+import org.aisen.osc.sdk.OSCSdk;
 import org.aisen.osc.sdk.bean.TweetBean;
 import org.aisen.osc.sdk.bean.TweetBeans;
 import org.aisen.osc.support.bean.MenuBean;
@@ -105,7 +105,7 @@ public class TweetListFragment extends ACombinationRefreshListFragment<TweetBean
 			int pageIndex = mode == RefreshMode.reset ? 1 : Integer.parseInt(nextPage);
 			int pageSize = AppSettings.getTweetListSize();
 
-			TweetBeans result = OSCApi.newInstance(AppContext.getToken()).getTweetList(type, pageIndex, pageSize); 
+			TweetBeans result = OSCSdk.newInstance(AppContext.getToken()).getTweetList(type, pageIndex, pageSize); 
 			// 加载数目少于3个，就默认全部加载完了
 			if (result != null && result.getTweetlist().size() < AppSettings.minSize())
 				result.setNoMore(true);
