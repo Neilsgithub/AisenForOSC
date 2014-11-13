@@ -141,6 +141,7 @@ public class LoginFragment extends ABaseFragment implements TextWatcher {
 	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 	}
 
+	// 每次文本改变后，隐藏错误提示信息
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		txtError.setVisibility(View.GONE);

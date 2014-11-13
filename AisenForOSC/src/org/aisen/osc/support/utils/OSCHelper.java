@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.aisen.osc.R;
+import org.aisen.osc.sdk.bean.TweetBean;
 import org.android.loader.core.ImageConfig;
 
 import android.content.Context;
@@ -11,6 +12,8 @@ import android.content.res.Resources;
 
 import com.m.common.context.GlobalContext;
 import com.m.common.utils.DateUtils;
+import com.m.common.utils.SystemUtility;
+import com.m.common.utils.SystemUtility.NetWorkType;
 
 public class OSCHelper {
 
@@ -25,6 +28,17 @@ public class OSCHelper {
 		
 		config.setLoadingBitmapRes(R.drawable.user_placeholder);
 		config.setLoadfaildBitmapRes(R.drawable.user_placeholder);
+		
+		return config;
+	}
+	
+	public static ImageConfig getTweetImageConfig() {
+		ImageConfig config = new ImageConfig();
+		
+		config.setId("TweetList");
+		config.setLoadfaildBitmapRes(R.drawable.bg_timeline_loading);
+		config.setLoadingBitmapRes(R.drawable.bg_timeline_loading);
+		config.setMaxWidth(Math.round(SystemUtility.getScreenWidth() / 2.0f * 3 / 4));
 		
 		return config;
 	}
@@ -53,6 +67,13 @@ public class OSCHelper {
 		}
 		
 		return client;
+	}
+	
+	public static String getTweetImage(TweetBean tweet) {
+		if (SystemUtility.getNetworkType() == NetWorkType.wifi)
+			return tweet.getImgBig();
+		else 
+			return tweet.getImgSmall();
 	}
 	
 	public static String convDate(String time) {

@@ -11,12 +11,14 @@ import org.aisen.osc.support.utils.AppContext;
 import org.aisen.osc.support.utils.AppSettings;
 import org.aisen.osc.support.utils.OSCHelper;
 import org.android.loader.BitmapLoader;
+import org.android.loader.core.ImageConfig;
 
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.m.support.Inject.ViewInject;
@@ -133,6 +135,9 @@ public class TweetListFragment extends ACombinationRefreshListFragment<TweetBean
 		@ViewInject(id = R.id.btnMenus) 
 		View btnMenus;
 		
+		@ViewInject(id = R.id.img)
+		ImageView img;
+		
 		@Override
 		public int inflateViewId() {
 			return R.layout.item_tweet;
@@ -159,6 +164,22 @@ public class TweetListFragment extends ACombinationRefreshListFragment<TweetBean
 			
 			// 正文
 			txtBody.setText(data.getBody());
+			
+			// 图片
+			if (!TextUtils.isEmpty(data.getImgSmall()) && !TextUtils.isEmpty(data.getImgBig())) {
+				img.setVisibility(View.VISIBLE);
+				
+				ImageConfig config = OSCHelper.getTweetImageConfig();
+				img.setLayoutParams(new LinearLayout.LayoutParams(config.getMaxWidth(), 
+																	Math.round(config.getMaxWidth() * 1.0f * 3 / 4)));
+				BitmapLoader.getInstance().display(TweetListFragment.this, 
+														OSCHelper.getTweetImage(data), 
+														img, 
+														config);
+			}
+			else {
+				img.setVisibility(View.GONE);
+			}
 			
 			// 评论数
 			txtComment.setVisibility(data.getCommentCount() > 0 ? View.VISIBLE : View.GONE);
